@@ -15,16 +15,14 @@ class ImageBrightenNode(Node):
             .get_parameter_value()
             .double_value
         )
-        input_image_topic = (
-            self.declare_parameter(
-                "input_image_topic", "/auv4/front_cam/color/image/compressed"
-            )
+        input_compressed_image_topic = (
+            self.declare_parameter("input_compressed_image_topic", "image/compressed")
             .get_parameter_value()
             .string_value
         )
-        output_image_topic = (
+        output_compressed_image_topic = (
             self.declare_parameter(
-                "output_image_topic", "/auv4/front_cam/color/brighten/image/compressed"
+                "output_compressed_image_topic", "brighten/image/compressed"
             )
             .get_parameter_value()
             .string_value
@@ -32,9 +30,11 @@ class ImageBrightenNode(Node):
 
         self.bridge = CvBridge()
         self.subscription = self.create_subscription(
-            CompressedImage, input_image_topic, self.image_callback, 10
+            CompressedImage, input_compressed_image_topic, self.image_callback, 10
         )
-        self.publisher = self.create_publisher(CompressedImage, output_image_topic, 10)
+        self.publisher = self.create_publisher(
+            CompressedImage, output_compressed_image_topic, 10
+        )
 
         self.get_logger().info(
             f"ImageBrightenNode started with brightness factor {self.brightness_factor}"
