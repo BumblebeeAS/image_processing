@@ -3,7 +3,7 @@ import numpy as np
 import rclpy
 from cv_bridge import CvBridge
 from rclpy.node import Node
-from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import Image
 
 
 class ImageBrightenNode(Node):
@@ -15,36 +15,30 @@ class ImageBrightenNode(Node):
             .get_parameter_value()
             .double_value
         )
-        input_compressed_image_topic = (
-            self.declare_parameter("input_compressed_image_topic", "image/compressed")
+        input_image_topic = (
+            self.declare_parameter("input_image_topic", "image")
             .get_parameter_value()
             .string_value
         )
-        output_compressed_image_topic = (
-            self.declare_parameter(
-                "output_compressed_image_topic", "brighten/image/compressed"
-            )
+        output_image_topic = (
+            self.declare_parameter("output_image_topic", "brighten/image")
             .get_parameter_value()
             .string_value
         )
 
         self.bridge = CvBridge()
         self.subscription = self.create_subscription(
-            CompressedImage, input_compressed_image_topic, self.image_callback, 10
+            Image, input_image_topic, self.image_callback, 10
         )
-        self.publisher = self.create_publisher(
-            CompressedImage, output_compressed_image_topic, 10
-        )
+        self.publisher = self.create_publisher(Image, output_image_topic, 10)
 
         self.get_logger().info(
             f"ImageBrightenNode started with brightness factor {self.brightness_factor}"
         )
 
-    def image_callback(self, msg: CompressedImage):
+    def image_callback(self, msg: Image):
         try:
-            cv_image = self.bridge.compressed_imgmsg_to_cv2(
-                msg, desired_encoding="bgr8"
-            )
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
         except Exception as e:
             self.get_logger().error(f"CV Bridge error: {e}")
             return
@@ -60,7 +54,7 @@ class ImageBrightenNode(Node):
         # wb.setSaturationThreshold(0.99)  # optional tuning
         # balanced = wb.balanceWhite(sharpened_image)
 
-        output_msg = self.bridge.cv2_to_compressed_imgmsg(sharpened_image)
+        output_msg = self.bridge.cv2_to_imgmsg(sharpened_image, encoding="bgr8")
         output_msg.header = msg.header
         self.publisher.publish(output_msg)
 
