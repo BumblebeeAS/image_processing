@@ -6,12 +6,12 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image
 
 
-class ImageBrightenNode(Node):
+class ImageBrightenNode(Node): # actually sharpens not brighten
     def __init__(self):
         super().__init__("image_brighten_node")
 
         self.brightness_factor = (
-            self.declare_parameter("brightness_factor", 1.2)
+            self.declare_parameter("sharpness_factor", 1.2)
             .get_parameter_value()
             .double_value
         )
@@ -21,7 +21,7 @@ class ImageBrightenNode(Node):
             .string_value
         )
         output_image_topic = (
-            self.declare_parameter("output_image_topic", "brighten/image")
+            self.declare_parameter("output_image_topic", "image_sharpened")
             .get_parameter_value()
             .string_value
         )
