@@ -20,6 +20,7 @@ setup(
     entry_points={
         "console_scripts": [
             "image_brighten_node = image_processing.image_brighten_node:main",
+            "depth_to_rgb_node = image_processing.depth_to_rgb_node:main",
         ],
     },
 )
