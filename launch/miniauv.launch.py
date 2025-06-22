@@ -16,17 +16,8 @@ import os
 import yaml
 
 from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.actions import IncludeLaunchDescription
-from launch.conditions import IfCondition
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-
 from launch_ros.actions import Node
-
-
 
 
 def generate_launch_description():
@@ -37,6 +28,7 @@ def generate_launch_description():
         parameters=[{
             'image_topic': '/dwe/image_raw',
             'undistorted_image_topic': '/dwe/image_rect_color',
+            'camera_info_topic': '/dwe/camera_info',  # Add the calibration file path
         }],
         output='screen'
     )
