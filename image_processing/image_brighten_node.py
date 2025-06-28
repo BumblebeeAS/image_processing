@@ -3,6 +3,7 @@ import numpy as np
 import rclpy
 from cv_bridge import CvBridge
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image
 
 
@@ -28,9 +29,11 @@ class ImageBrightenNode(Node):
 
         self.bridge = CvBridge()
         self.subscription = self.create_subscription(
-            Image, input_image_topic, self.image_callback, 10
+            Image, input_image_topic, self.image_callback, qos_profile_sensor_data
         )
-        self.publisher = self.create_publisher(Image, output_image_topic, 10)
+        self.publisher = self.create_publisher(
+            Image, output_image_topic, qos_profile_sensor_data
+        )
 
         self.get_logger().info(
             f"ImageBrightenNode started with brightness factor {self.brightness_factor}"

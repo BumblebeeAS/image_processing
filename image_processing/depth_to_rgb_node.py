@@ -25,7 +25,9 @@ class DepthToRGBNode(Node):
         self.subscription = self.create_subscription(
             Image, input_image_topic, self.image_callback, qos_profile_sensor_data
         )
-        self.publisher = self.create_publisher(Image, output_image_topic, 10)
+        self.publisher = self.create_publisher(
+            Image, output_image_topic, qos_profile_sensor_data
+        )
 
     def image_callback(self, msg: Image):
         try:
