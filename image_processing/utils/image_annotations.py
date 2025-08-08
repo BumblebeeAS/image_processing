@@ -1,4 +1,4 @@
-from typing import Sequence, Iterable
+from typing import Iterable, Sequence
 
 import numpy as np
 from foxglove_msgs.msg import Color, ImageAnnotations, Point2, PointsAnnotation
@@ -27,15 +27,17 @@ DEFAULT_COLOR_PALETTE = [
 
 def get_image_annotations(
     header: Header,
-    polygons_list: Iterable[Iterable[np.ndarray]],
+    point_sets_list: Iterable[Iterable[np.ndarray]],
     colors: Sequence[str] = DEFAULT_COLOR_PALETTE,
+    points_annotation_type=PointsAnnotation.LINE_LOOP,
 ) -> ImageAnnotations:
-    """Get polygons colored by their sublist's index.
+    """Get points colored by their sublist's index.
 
     Args:
         header (Header): Header for the annotations.
-        polygons_list (Iterable[Iterable[np.ndarray]]): List of lists of polygons, where
-            each sublist of polygons is colored by their index in the list of lists.
+        point_sets_list (Iterable[Iterable[np.ndarray]]): List of lists of point sets, where
+            each sublist of point sets is colored by their index in the list of lists. A point
+            set can be a collection of unordered points or polygons, etc.
         colors (Sequence[str]): List of hex color strings to use for each sublist.
             Defaults to DEFAULT_COLOR_PALETTE.
 
@@ -54,13 +56,13 @@ def get_image_annotations(
         a = 255
         return (r, g, b, a)
 
-    def get_annotation(i: int, polygon) -> PointsAnnotation:
-        points = [Point2(x=float(x), y=float(y)) for x, y in polygon]
+    def get_annotation(i: int, point_set) -> PointsAnnotation:
+        points = [Point2(x=float(x), y=float(y)) for x, y in point_set]
         outline_color = hex_to_rgba(colors[i % len(colors)])
         r, g, b, a = map(lambda x: x / 255.0, outline_color)
         annotation = PointsAnnotation(
             timestamp=header.stamp,
-            type=PointsAnnotation.LINE_LOOP,
+            type=points_annotation_type,
             points=points,
             outline_color=Color(r=r, g=g, b=b, a=a),
             thickness=2.0,
@@ -69,9 +71,9 @@ def get_image_annotations(
 
     point_annotations = []
 
-    for i, polygons in enumerate(polygons_list):
-        for polygon in polygons:
-            annotation = get_annotation(i, polygon)
+    for i, point_sets in enumerate(point_sets_list):
+        for point_set in point_sets:
+            annotation = get_annotation(i, point_set)
             point_annotations.append(annotation)
 
     image_annotations = ImageAnnotations(points=point_annotations)
