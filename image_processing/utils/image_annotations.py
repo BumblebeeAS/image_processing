@@ -29,7 +29,8 @@ def get_image_annotations(
     header: Header,
     point_sets_list: Iterable[Iterable[np.ndarray]],
     colors: Sequence[str] = DEFAULT_COLOR_PALETTE,
-    points_annotation_type=PointsAnnotation.LINE_LOOP,
+    points_annotation_type: int = PointsAnnotation.LINE_LOOP,
+    thickness: int = 5,
 ) -> ImageAnnotations:
     """Get points colored by their sublist's index.
 
@@ -40,6 +41,8 @@ def get_image_annotations(
             set can be a collection of unordered points or polygons, etc.
         colors (Sequence[str]): List of hex color strings to use for each sublist.
             Defaults to DEFAULT_COLOR_PALETTE.
+        points_annotation_type (int): (POINTS, LINE_LOOP, LINE_LIST, LINE_STRIP).
+        thickness (int): PointsAnnotation thickness.
 
     Returns:
         ImageAnnotations: An ImageAnnotations message containing PointsAnnotations
@@ -65,7 +68,7 @@ def get_image_annotations(
             type=points_annotation_type,
             points=points,
             outline_color=Color(r=r, g=g, b=b, a=a),
-            thickness=2.0,
+            thickness=thickness,
         )
         return annotation
 
