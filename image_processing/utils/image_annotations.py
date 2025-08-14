@@ -30,7 +30,7 @@ def get_image_annotations(
     point_sets_list: Iterable[Iterable[np.ndarray]],
     colors: Sequence[str] = DEFAULT_COLOR_PALETTE,
     points_annotation_type: int = PointsAnnotation.LINE_LOOP,
-    thickness: int = 5,
+    thickness: float = 5.0,
 ) -> ImageAnnotations:
     """Get points colored by their sublist's index.
 
