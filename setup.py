@@ -19,8 +19,9 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "image_brighten_node = image_processing.image_brighten_node:main",
             "depth_to_rgb_node = image_processing.depth_to_rgb_node:main",
+            "image_brighten_node = image_processing.image_brighten_node:main",
+            "restamp_camera_node = image_processing.restamp_camera_node:main",
         ],
     },
 )
