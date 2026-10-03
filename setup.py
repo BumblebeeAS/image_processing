@@ -16,7 +16,6 @@ setup(
     maintainer_email="todo@todo.com",
     description="Image processing package",
     license="todo",
-    tests_require=["pytest"],
     entry_points={
         "console_scripts": [
             "depth_to_rgb_node = image_processing.depth_to_rgb_node:main",
