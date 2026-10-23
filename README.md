@@ -43,6 +43,11 @@ ros2 run image_processing restamp_camera_node --ros-args \
 > that support `override_timestamps_with_wall_time`, prefer that option where
 > appropriate.
 
+### Rectified camera calibration
+
+`rectified_camera_info_node` makes the rectified calibration compatible with
+pinhole camera consumers. The UAV camera launches include it automatically.
+
 ## Utility modules
 
 - `image_processing.utils.image_annotations` creates `foxglove_msgs/msg/ImageAnnotations` from collections of 2D points.

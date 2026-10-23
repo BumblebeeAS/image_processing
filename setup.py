@@ -21,6 +21,7 @@ setup(
             "depth_to_rgb_node = image_processing.depth_to_rgb_node:main",
             "image_brighten_node = image_processing.image_brighten_node:main",
             "restamp_camera_node = image_processing.restamp_camera_node:main",
+            "rectified_camera_info_node = image_processing.rectified_camera_info_node:main",
         ],
     },
 )
