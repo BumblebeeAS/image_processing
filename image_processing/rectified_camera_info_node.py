@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import QoSPresetProfiles
 from sensor_msgs.msg import CameraInfo, RegionOfInterest
 
 
@@ -27,11 +27,17 @@ class RectifiedCameraInfoNode(Node):
         super().__init__("rectified_camera_info_node")
         input_topic = self.declare_parameter("input_topic", "rect/camera_info_internal").value
         output_topic = self.declare_parameter("output_topic", "rect/camera_info").value
+        input_qos = QoSPresetProfiles.get_from_short_key(
+            self.declare_parameter("input_qos", "DEFAULT").value.lower()
+        )
+        output_qos = QoSPresetProfiles.get_from_short_key(
+            self.declare_parameter("output_qos", "DEFAULT").value.lower()
+        )
         self.publisher = self.create_publisher(
-            CameraInfo, output_topic, qos_profile_sensor_data
+            CameraInfo, output_topic, output_qos
         )
         self.subscription = self.create_subscription(
-            CameraInfo, input_topic, self.callback, qos_profile_sensor_data
+            CameraInfo, input_topic, self.callback, input_qos
         )
 
     def callback(self, message):
