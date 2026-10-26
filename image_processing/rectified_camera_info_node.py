@@ -27,7 +27,9 @@ class RectifiedCameraInfoNode(Node):
         super().__init__("rectified_camera_info_node")
         input_topic = self.declare_parameter("input_topic", "rect/camera_info_internal").value
         output_topic = self.declare_parameter("output_topic", "rect/camera_info").value
-        self.publisher = self.create_publisher(CameraInfo, output_topic, 10)
+        self.publisher = self.create_publisher(
+            CameraInfo, output_topic, qos_profile_sensor_data
+        )
         self.subscription = self.create_subscription(
             CameraInfo, input_topic, self.callback, qos_profile_sensor_data
         )
