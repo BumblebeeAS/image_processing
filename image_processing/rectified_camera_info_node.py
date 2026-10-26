@@ -4,7 +4,8 @@ from copy import deepcopy
 
 import rclpy
 from rclpy.node import Node
-from rclpy.qos import QoSPresetProfiles
+from rclpy.qos import QoSPolicyKind
+from rclpy.qos_overriding_options import QoSOverridingOptions
 from sensor_msgs.msg import CameraInfo, RegionOfInterest
 
 
@@ -27,17 +28,18 @@ class RectifiedCameraInfoNode(Node):
         super().__init__("rectified_camera_info_node")
         input_topic = self.declare_parameter("input_topic", "rect/camera_info_internal").value
         output_topic = self.declare_parameter("output_topic", "rect/camera_info").value
-        input_qos = QoSPresetProfiles.get_from_short_key(
-            self.declare_parameter("input_qos", "DEFAULT").value.lower()
-        )
-        output_qos = QoSPresetProfiles.get_from_short_key(
-            self.declare_parameter("output_qos", "DEFAULT").value.lower()
-        )
+        qos_overrides = QoSOverridingOptions([
+            QoSPolicyKind.RELIABILITY,
+            QoSPolicyKind.DURABILITY,
+            QoSPolicyKind.HISTORY,
+            QoSPolicyKind.DEPTH,
+        ])
         self.publisher = self.create_publisher(
-            CameraInfo, output_topic, output_qos
+            CameraInfo, output_topic, 10, qos_overriding_options=qos_overrides
         )
         self.subscription = self.create_subscription(
-            CameraInfo, input_topic, self.callback, input_qos
+            CameraInfo, input_topic, self.callback, 10,
+            qos_overriding_options=qos_overrides,
         )
 
     def callback(self, message):

@@ -45,7 +45,7 @@ ros2 run image_processing restamp_camera_node --ros-args \
 
 ### Rectified camera calibration
 
-`rectified_camera_info_node` makes the rectified calibration compatible with pinhole camera consumers. Set `input_qos` and `output_qos` to ROS QoS preset names such as `DEFAULT` or `SENSOR_DATA`; both default to `DEFAULT`.
+`rectified_camera_info_node` makes the rectified calibration compatible with pinhole camera consumers. Launch files can configure its publisher and subscription through standard `qos_overrides` parameters.
 
 ## Utility modules
 
